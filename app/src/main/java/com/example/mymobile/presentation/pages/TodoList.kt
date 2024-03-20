@@ -2,8 +2,9 @@ package com.example.mymobile.presentation.pages
 
 import ToDoCard
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -22,35 +23,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.mymobile.domain.entity.TodoEntity
 import com.example.mymobile.navigation.Screen
+import com.example.mymobile.presentation.pages.view_model.TodoListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Todolist(navController: NavHostController) {
-    val todoEntityList = listOf(
-        TodoEntity(
-            title = "Сходить на пару",
-            subtitle = "ходить на прау по налийскому языку"
-        ),
-        TodoEntity(
-                title = "Сходить на пару",
-            subtitle = "ходить на прау по налийскому языку"
-        ),
-        TodoEntity(
-            title = "Сходить на пару",
-            subtitle = "ходить на прау по налийскому языку"
-        ),
-        TodoEntity(
-            title = "Сходить на пару",
-            subtitle = "ходить на прау по налийскому языку"
-        ),
-        TodoEntity(
-            title = "Сходить на пару",
-            subtitle = "ходить на прау по налийскому языку"
-        )
-    )
+fun Todolist(navController: NavHostController, viewModel: TodoListViewModel) {
+    val viewModelLocal = viewModel<TodoListViewModel>()
     Scaffold(
         containerColor = MaterialTheme.colorScheme.secondary,
         topBar = {
@@ -87,6 +69,9 @@ fun Todolist(navController: NavHostController) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = {
+                viewModelLocal.addTodo(
+                    TodoEntity(title = "ОВАЯ ЗАДАЧА", subtitle = "Новая задача появилась")
+                )
             }) {
                 Icon(
                     Icons.Filled.Add,
@@ -95,14 +80,25 @@ fun Todolist(navController: NavHostController) {
             }
         },
         content = { padding ->
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(padding)
                     .padding(top = 22.dp, start = 7.dp, end = 7.dp),
                 verticalArrangement = Arrangement.spacedBy(21.dp)
             ) {
-                todoEntityList.forEach() {
-                    ToDoCard(a = it.title, b = it.subtitle, onClick = {navController.navigate(Screen.TodoScreen.withArgs(it.title, it.subtitle))})
+                items(viewModelLocal.todoList){
+                    ToDoCard(
+                        title = it.title,
+                        subtitle = it.subtitle,
+                        onClick = {
+                            navController.navigate(
+                                Screen.TodoScreen.withArgs(
+                                    it.title,
+                                    it.subtitle,
+                                )
+                            )
+                        }
+                    )
                 }
             }
         })

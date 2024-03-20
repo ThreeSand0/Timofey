@@ -1,6 +1,5 @@
 package com.example.mymobile.presentation.pages
 
-import android.media.SubtitleData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -27,10 +26,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.mymobile.presentation.pages.view_model.TodoListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoScreen(title: String? = null, subtitle: String? = null, navController: NavController) {
+fun TodoScreen(
+    title: String? = null,
+    subtitle: String? = null,
+    navController: NavController,
+    viewModel: TodoListViewModel,
+    updateTodo: () -> Unit
+) {
     var titleState by remember { mutableStateOf(title ?: "") }
     var descriptionState by remember { mutableStateOf(subtitle ?: "") }
     Scaffold(
